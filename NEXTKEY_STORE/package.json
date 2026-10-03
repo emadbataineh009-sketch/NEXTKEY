@@ -1,0 +1,9 @@
+{
+  "name": "nextkey-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NEXTKEY digital store with shared server-side products",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
