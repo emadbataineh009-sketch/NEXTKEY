@@ -31,7 +31,9 @@ async function connectDB() {
 }
 connectDB();
 
-function hash(value) { return crypto.createHash('sha256').update(value).digest('hex'); }
+function hash(value) { 
+  return crypto.createHash('sha256').update(value).digest('hex'); 
+}
 
 function json(res, status, data) {
   const body = JSON.stringify(data);
@@ -83,14 +85,14 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    // 1. جلب المنتجات من MongoDB
+    // 1. جلب المنتجات والعروض من MongoDB
     if (url.pathname === '/api/products' && req.method === 'GET') {
       if (!productsCollection) return json(res, 500, { error: 'Database not connected' });
       const products = await productsCollection.find({}).project({ _id: 0 }).toArray();
       return json(res, 200, products);
     }
 
-    // 2. تسجيل دخول الإدمن
+    // 2. تسجيل دخول الأدمن
     if (url.pathname === '/api/admin/login' && req.method === 'POST') {
       const data = await body(req);
       const a = Buffer.from(hash(String(data.password || '')));
@@ -103,7 +105,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { token });
     }
 
-    // 3. إضافة منتج جديد في MongoDB
+    // 3. إضافة منتج جديد إلى MongoDB
     if (url.pathname === '/api/products' && req.method === 'POST') {
       if (!authorized(req)) return json(res, 401, { error: 'غير مصرح' });
       if (!productsCollection) return json(res, 500, { error: 'Database not connected' });
@@ -128,7 +130,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { ok: true });
     }
 
-    // 5. خدمة الملفات الثابتة (Static Files)
+    // 5. خدمة الملفات الثابتة (Public Files)
     let filePath = url.pathname === '/' ? path.join(PUBLIC, 'index.html') : path.join(PUBLIC, url.pathname);
     if (!filePath.startsWith(PUBLIC)) return json(res, 403, { error: 'Forbidden' });
     if (!fs.existsSync(filePath)) return json(res, 404, { error: 'Not found' });
